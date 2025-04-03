@@ -57,4 +57,16 @@ if __name__ == "__main__":
     driver = init_driver()
     driver.get(url)
     scroll_page(driver)
+
+    items = driver.find_elements(By.CSS_SELECTOR, "div.cat-item")
+    results = []
+
+    for item in items:
+        data = extract_item_data(item)
+        if data:
+            results.append(data)
+
     driver.quit()
+
+    for r in results:
+        print(r)
