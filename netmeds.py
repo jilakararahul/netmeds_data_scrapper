@@ -11,14 +11,12 @@ def init_driver():
     options.add_argument('--disable-gpu')
     options.add_argument('--no-sandbox')
     options.add_argument('--disable-dev-shm-usage')
-    
     service = Service(ChromeDriverManager().install())
     return webdriver.Chrome(service=service, options=options)
 
 def scroll_page(driver, max_attempts=150, pause_time=2):
     last_height = driver.execute_script("return document.body.scrollHeight")
     attempts = 0
-    
     while attempts < max_attempts:
         driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
         time.sleep(pause_time)
@@ -32,17 +30,16 @@ def scroll_page(driver, max_attempts=150, pause_time=2):
 def extract_item_data(item):
     try:
         name = item.find_element(By.CSS_SELECTOR, "h3.clsgetname").text
-        
         try:
             final_price = item.find_element(By.CSS_SELECTOR, "span.final-price").text
         except:
             final_price = item.find_element(By.CSS_SELECTOR, "span#final_price").text
-        
+
         try:
             mrp = item.find_element(By.CSS_SELECTOR, "strike").text
         except:
             mrp = final_price
-            
+
         return {
             "name": name,
             "final_price": final_price,
@@ -58,7 +55,7 @@ if __name__ == "__main__":
     driver.get(url)
     scroll_page(driver)
 
-    items = driver.find_elements(By.CSS_SELECTOR, "div.cat-item")
+    items = driver.find_elements(By.CSS_SELECTOR, "div.cat-item")  # Adjust based on actual product selector
     results = []
 
     for item in items:
@@ -68,5 +65,6 @@ if __name__ == "__main__":
 
     driver.quit()
 
+    # Display scraped data
     for r in results:
         print(r)
